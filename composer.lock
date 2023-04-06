@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "121ea3a2fffe49b3ef9aa4d064b28c19",
+    "content-hash": "a6a8551746893d813bccbd05f039c602",
     "packages": [
         {
             "name": "brick/math",
@@ -2277,6 +2277,50 @@
                 }
             ],
             "time": "2023-02-25T19:38:58+00:00"
+        },
+        {
+            "name": "prolaxu/easy-curd",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prolaxu/easy-crud.git",
+                "reference": "f630fd3cbac4f12e2e34916eb6594f9c4f596c73"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prolaxu/easy-crud/zipball/f630fd3cbac4f12e2e34916eb6594f9c4f596c73",
+                "reference": "f630fd3cbac4f12e2e34916eb6594f9c4f596c73",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Prolaxu\\EasyCrud\\EasyCrudServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Prolaxu\\EasyCrud\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Laxman Adhikari",
+                    "email": "adhikarilaxu0001@gmail.com"
+                }
+            ],
+            "description": "Package that helps you create crud faster.",
+            "support": {
+                "issues": "https://github.com/prolaxu/easy-crud/issues",
+                "source": "https://github.com/prolaxu/easy-crud/tree/v0.2"
+            },
+            "time": "2023-03-29T18:24:01+00:00"
         },
         {
             "name": "psr/container",

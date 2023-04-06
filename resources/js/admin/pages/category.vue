@@ -23,53 +23,7 @@
                                             </button>
                                         </h5>
 
-                                        <!-- <span v-if="errors">
-                                            <div
-                                                class="alert alert-warning alert-dismissible fade show"
-                                                role="alert"
-                                            >
-                                                <strong
-                                                    >Maximum limit
-                                                    exceed!</strong
-                                                >
-                                                <br />Please enter tag within 10
-                                                letters.
-                                                <button
-                                                    type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="alert"
-                                                    aria-label="Close"
-                                                ></button>
-                                            </div>
-                                        </span>
-                                        <span v-if="createdAlert">
-                                            <div
-                                                class="alert alert-success alert-dismissible fade show"
-                                                role="alert"
-                                            >
-                                                <strong>Tag created!</strong>
-                                                <button
-                                                    type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="alert"
-                                                    aria-label="Close"
-                                                ></button>
-                                            </div>
-                                        </span>
-                                        <span v-if="delete_msg">
-                                            <div
-                                                class="alert alert-success alert-dismissible fade show"
-                                                role="alert"
-                                            >
-                                                <strong>Tag deleted!</strong>
-                                                <button
-                                                    type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="alert"
-                                                    aria-label="Close"
-                                                ></button>
-                                            </div>
-                                        </span> -->
+                                       
                                         <!-- Table -->
                                         <table
                                             class="table table-borderless datatable"
@@ -78,7 +32,10 @@
                                                 <tr>
                                                     <th scope="col">ID</th>
                                                     <th scope="col">
-                                                        Tag name
+                                                        Category name
+                                                    </th>
+                                                    <th scope="col">
+                                                        Category image
                                                     </th>
                                                     <th scope="col">
                                                         Created at
@@ -88,18 +45,28 @@
                                             </thead>
                                             <tbody>
                                                 <tr
-                                                    v-for="(tag, i) in tags"
+                                                    v-for="(cat, i) in category"
                                                     :key="i"
-                                                    v-if="tags.length"
+                                                    v-if="category.length"
                                                 >
                                                     <th scope="row">
                                                         <a href="#">{{
-                                                            tag.id
+                                                            cat.id
                                                         }}</a>
                                                     </th>
-                                                    <td>{{ tag.tagName }}</td>
                                                     <td>
-                                                        {{ tag.created_at }}
+                                                        {{ cat.categoryName }}
+                                                    </td>
+                                                    <td>
+                                                        <img
+                                                            style="width: 7rem"
+                                                            :src="cat.iconImage"
+                                                            alt=""
+                                                            srcset=""
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        {{ cat.created_at }}
                                                     </td>
                                                     <td>
                                                         <button
@@ -108,7 +75,7 @@
                                                             data-toggle="modal"
                                                             data-target="#exampleModal1"
                                                             @click="
-                                                                showEditTag(tag)
+                                                                showEditTag(cat)
                                                             "
                                                         >
                                                             Edit
@@ -117,10 +84,7 @@
                                                             type="button"
                                                             class="btn btn-danger btn-sm"
                                                             @click="
-                                                                deleteTag(tag)
-                                                            "
-                                                            :loading="
-                                                                tag.isDeleting
+                                                                deleteTag(cat)
                                                             "
                                                         >
                                                             Delete
@@ -138,6 +102,7 @@
                     <!-- End Left side columns -->
                 </div>
             </section>
+
             <!-- edit model -->
             <div
                 class="modal fade"
@@ -151,40 +116,84 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
-                                Edit tags?
+                                Edit category?
                             </h5>
                         </div>
                         <div class="modal-body">
-                            <input v-model="editdata.tagName" type="text" />
+                            <!-- <input
+                                v-model="data.tagName"
+                                type="text"
+                                placeholder="Type category title"
+                            /> -->
+
+                            <Input
+                                v-model="editdata.categoryName"
+                                placeholder="Enter category name"
+                                clearable
+                                style="width: 200px"
+                                class="my-3"
+                            />
+                            <Upload
+                                v-show="newUpload"
+                                multiple
+                                type="drag"
+                                v-model="editdata.iconImage"
+                                action="/upload"
+                                :format="['jpeg', 'png', 'jpg']"
+                                :on-format-error="handleFormatError"
+                                :on-success="handleSuccess"
+                                :max-size="3048"
+                                :on-exceeded-size="handleMaxSize"
+                                :on-error="handleError"
+                            >
+                                <div style="padding: 20px 0">
+                                    <Icon
+                                        type="ios-cloud-upload"
+                                        size="52"
+                                        style="color: #3399ff"
+                                    ></Icon>
+                                    <p>Click or drag files here to upload</p>
+                                </div>
+                            </Upload>
+                            <div class="flex">
+                                <img
+                                    :src="`${editdata.iconImage}`"
+                                    alt=""
+                                    class="img-thumbnail container-fluid"
+                                    style="width: 25rem; cursor: pointer"
+                                />
+
+                                <lord-icon
+                                    v-show="toggle_delete"
+                                    src="https://cdn.lordicon.com/kfzfxczd.json"
+                                    trigger="hover"
+                                    style="width: 29px;height: 29px;padding-top: 0.5rem;color: crimson;"
+                                    
+                                    @click="deleteImg()"
+                                >
+                                    Delete
+                                </lord-icon>
+                            </div>
                         </div>
                         <div class="modal-footer">
-                            <!-- <button
+                            <button
                                 type="button"
                                 class="btn btn-secondary"
-                                
-                                @click="closeModal=true"
+                                data-dismiss="modal"
                             >
-                            Close -->
-                            <div v-if="closeModal">
-                                <button
-                                    data-dismiss="modal"
-                                    type="button"
-                                    class="btn btn-secondary"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                            <!-- </button> -->
+                                Close
+                            </button>
+
                             <button
                                 type="button"
                                 class="btn btn-primary"
                                 id="liveToastBtn"
-                                @click="editTag"
+                                @click="editCategory()"
                                 :disabled="isAdding"
                                 :loading="isAdding"
                                 data-dismiss="modal"
                             >
-                                {{ isAdding ? "Editting...." : "Save" }}
+                                {{ isAdding ? "Editting...." : "Edit" }}
                             </button>
                         </div>
                     </div>
@@ -213,16 +222,25 @@
                                 type="text"
                                 placeholder="Type category title"
                             /> -->
-                           
-                            
-                            <Input   v-model="data.categoryName" placeholder="Enter category name" clearable style="width: 200px" class="my-3"/>
+
+                            <Input
+                                v-model="data.categoryName"
+                                placeholder="Enter category name"
+                                clearable
+                                style="width: 200px"
+                                class="my-3"
+                            />
                             <Upload
                                 multiple
                                 type="drag"
-                                action="/app/upload"
-                                :format="['jpeg','png','jpg']"
-                                :on-format-error="formatError"
+                                v-model="data.iconImage"
+                                action="/upload"
+                                :format="['jpeg', 'png', 'jpg']"
+                                :on-format-error="handleFormatError"
                                 :on-success="handleSuccess"
+                                :max-size="3048"
+                                :on-exceeded-size="handleMaxSize"
+                                :on-error="handleError"
                             >
                                 <div style="padding: 20px 0">
                                     <Icon
@@ -233,26 +251,28 @@
                                     <p>Click or drag files here to upload</p>
                                 </div>
                             </Upload>
-                            <div>
-                                <img :src="`uploads/${data.iconImage}`" alt="" srcset="">
-                            </div>
-                            
+
+                            <img
+                                :src="`${data.iconImage}`"
+                                alt=""
+                                class="img-thumbnail container-fluid"
+                                style="width: 25rem"
+                            />
                         </div>
                         <div class="modal-footer">
-                            <div v-if="closeModal">
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-dismiss="modal"
-                                >
-                                    Close
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                            >
+                                Close
+                            </button>
+
                             <button
                                 type="button"
                                 class="btn btn-primary"
                                 id="liveToastBtn"
-                                @click="addTag"
+                                @click="addCategory"
                                 :disabled="isAdding"
                                 :loading="isAdding"
                                 data-dismiss="modal"
@@ -263,6 +283,7 @@
                     </div>
                 </div>
             </div>
+
         </main>
     </div>
 </template>
@@ -273,117 +294,116 @@ export default {
         return {
             data: {
                 iconImage: "",
-                categoryName:'',
+                categoryName: "",
             },
             editdata: {
-                tagName: "",
+                iconImage: "",
+                categoryName: "",
             },
-            tags: [],
+            category: [],
             isAdding: false,
-
-            closeModal: false,
-
+            preview: false,
             model: false,
-            errors: false,
-            createdAlert: false,
-            delete_msg: false,
-             
+            newUpload: false,
+            toggle_delete: true,
         };
     },
 
     methods: {
-        async addTag() {
-           
+        async addCategory() {
             this.isAdding = true;
-            if (this.data.iconImage.trim() == "" && this.data.categoryName.trim()=='') {
+            if (this.data.categoryName.trim() == "") {
                 this.isAdding = false;
                 return this.w("Please fill up the form!");
             }
-            
-
-
-            const res = await this.callApi("post", "/app/upload", this.data);
+            if (this.data.iconImage.trim() == "") {
+                this.isAdding = false;
+                return this.w("Please include image!");
+            }
+            this.data.iconImage = `${this.data.iconImage}`;
+            const res = await this.callApi("post", "/add_category", this.data);
             this.isAdding = false;
 
-            if (res.status == 200) {
-                this.tags.unshift(res.data);
+            if (res.status == 201) {
+                this.category.unshift(res.data);
                 this.s("Category created successfully!");
-               
-                /* this.createdAlert = true; */
-                console.log(res);
+                this.data.iconImage = "";
+                this.data.categoryName = "";
 
-                /* setTimeout(() => {
-                    this.hide();
-                }, 3000); */
                 console.log("creadted");
             } else {
-                if (res.status == 422) {
-                    /*  this.errors = error.response.data.errors;*/
-                    /*  this.errors = true; */
-                   this.e("File type not supported!")
-                    this.data.tagName = "";
-                   /*  setTimeout(() => {
-                        this.hide();
-                    }, 3000); */
+                if (res.status == 500) {
+                    this.e("Something went wrong!");
+                    this.isAdding = false;
                 }
             }
         },
-        hide() {
-            this.errors = false;
-            this.createdAlert = false;
-            this.delete_msg = false;
-        },
 
-        async deleteTag(tag) {
-            /* this.$set(tag, 'isDeleting', true); */
+        async deleteImg() {
+            let image = this.editdata.iconImage;
 
-            if (confirm("Do you want to delete the tag?")) {
-                const res = await this.callApi("post", "/app/delete_tag", tag);
-                if (res.status == 200) {
-                    this.delete_msg = true;
-                    this.tags.splice(tag, 1);
-                    setTimeout(() => {
-                        this.hide();
-                    }, 3000);
-                    console.log("tag deleted");
-                } else {
-                    console.log("tag failed to delete");
-                }
+            const res = await this.callApi("post", "/delete_image", image);
+
+            if (res.status == 200) {
+                this.s("Image deleted!");
+                this.editdata.iconImage = "";
+                this.newUpload = true;
+                this.toggle_delete = false;
+            } else {
+                this.data.iconImage = image;
+                this.e("image failed to delete!");
+                this.newUpload = false;
             }
+
             /* this.isAdding = false; */
         },
 
-        async editTag() {
+        async editCategory() {
             const res = await this.callApi(
                 "post",
-                "/app/edit_tag",
+                "/edit_category",
                 this.editdata
             );
 
             if (res.status == 200) {
-                console.log("creadted");
+                this.s("Category editted successfully!");
+              
+                this.newUpload = false;
+                this.toggle_delete = true;
             } else {
-                console.log("error edditing tag");
+                this.e("Categoryfailed to edit!");
             }
         },
-        showEditTag(tag) {
-            this.editdata = tag;
+        showEditTag(cat) {
+            this.editdata = cat;
             this.closeModal = true;
         },
-        handleSuccess(res,file) {
-             this.s("File uploaded!") 
-           
-        
+
+        /* form validations */
+        handleSuccess(res, file) {
+            res = `uploads/${res}`;
+            this.editdata.iconImage = res;
         },
-        formatError(file) {
-            this.e("File format not supported!")
-        }
+        handleError(res, file) {
+            console.log(res);
+            console.log(file);
+        },
+        handleFormatError(file) {
+            this.e("File format not supported!");
+        },
+        handleMaxSize(file) {
+            this.e("Exceeding file size!");
+        },
+
+        handleShowPreview() {
+            this.preview = true;
+        },
     },
 
     async created() {
-        const res = await this.callApi("get", "/app/get_tag");
+        const res = await this.callApi("get", "/get_category");
         if (res.status == 200) {
-            this.tags = res.data;
+            this.category = res.data;
         } else {
             console.log("error in fetching  tags");
         }

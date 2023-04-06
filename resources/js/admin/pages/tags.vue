@@ -254,7 +254,7 @@ export default {
 
             const res = await this.callApi(
                 "post",
-                "/app/create_tag",
+                "/create_tag",
                 this.data
             );
             this.isAdding = false;
@@ -290,7 +290,7 @@ export default {
             /* this.$set(tag, 'isDeleting', true); */
 
             if (confirm('Do you want to delete the tag?')) {
-                const res = await this.callApi("post", '/app/delete_tag', tag);
+                const res = await this.callApi("post", '/delete_tag', tag);
                 if (res.status == 200) {
                     this.delete_msg = true;
                     this.tags.splice(tag, 1);
@@ -310,7 +310,7 @@ export default {
             
             const res = await this.callApi(
                 "post",
-                "/app/edit_tag",
+                "/edit_tag",
                 this.editdata
             );
 
@@ -328,7 +328,7 @@ export default {
     },
 
     async created() {
-        const res = await this.callApi("get", "/app/get_tag");
+        const res = await this.callApi("get", "/get_tag");
         if (res.status == 200) {
             this.tags = res.data;
         } else {
